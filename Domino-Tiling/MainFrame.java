@@ -217,6 +217,7 @@ public class MainFrame extends JFrame
 
 		Object[] options = {"Normal Chessboard",
                     "One Square Missing",
+                    "Adjacent Corners Missing",
                     "Opposite Corners Missing",
                 	"Two Squares Missing (Opposite Colors)",
                 	"Two Squares Missing (Any)"};
@@ -248,6 +249,12 @@ public class MainFrame extends JFrame
 			tainted.add(randomTuple(rand));
 		}
 		else if(s.equals(options[2]))
+		{
+			missingSquares = 2;
+			tainted.add(new Tuple(grid_size-1,grid_size-1));
+			tainted.add(new Tuple(0,grid_size-1));
+		}
+		else if(s.equals(options[3]))
 		{
 			missingSquares = 2;
 			tainted.add(new Tuple(0,0));

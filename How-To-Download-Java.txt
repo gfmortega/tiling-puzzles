@@ -1,0 +1,4 @@
+You need a Java Runtime Environment of 8 or higher to run these programs.
+If you play Minecraft, you probably have Java installed.
+
+You can download Java here: https://www.java.com/en/download/manual.jsp

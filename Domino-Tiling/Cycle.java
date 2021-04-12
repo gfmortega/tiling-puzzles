@@ -79,9 +79,9 @@ public class Cycle
 			}
 			else
 			{
-				if(!tainted.contains(sequence[t]))
+				if(!tainted.contains(sequence[t+1]))
 				{
-					if(!tainted.contains(sequence[t+1]))
+					if(!tainted.contains(sequence[t]))
 					{
 						g2d.setColor(paths[col]);
 						g2d.fill(r);
