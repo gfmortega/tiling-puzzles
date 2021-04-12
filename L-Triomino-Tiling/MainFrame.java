@@ -182,7 +182,8 @@ public class MainFrame extends JFrame
 		Object[] options = {"2 x 2",
                     "4 x 4",
                     "8 x 8",
-                	"16 x 16"};
+                	"16 x 16",
+                	"32 x 32"};
 
         JComboBox optionList = new JComboBox(options);
                 optionList.setSelectedIndex(0);
@@ -227,6 +228,13 @@ public class MainFrame extends JFrame
 			showHideLatticeButton.setVisible(true);
 			enhanceLatticeButton.setVisible(true);
 		}
+		else if(s.equals(options[4]))
+		{
+			n = 5;
+			GameData.tileSize = 18;
+			showHideLatticeButton.setVisible(true);
+			enhanceLatticeButton.setVisible(true);
+		}
 
 
 		GameData.shuffleColors();
@@ -234,7 +242,7 @@ public class MainFrame extends JFrame
 		grid_size = (1<<n);
 		
 		width = grid_size*GameData.tileSize;
-		height = grid_size*GameData.tileSize + 75;
+		height = grid_size*GameData.tileSize + 78;
 		this.getContentPane().setPreferredSize(new Dimension(width,height));
 		this.pack();		
 
@@ -263,7 +271,7 @@ public class MainFrame extends JFrame
 		successfulClicks = 0;
 		this.setTitle("L-Triomino Tiling");
 
-		lattice = new Lattice(width, height, n-1);
+		lattice = new Lattice(width, n-1);
 		
 		return true;
 	}

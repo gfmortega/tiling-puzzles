@@ -2,15 +2,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.*;
 import java.util.ArrayList;
+import java.util.Stack;
 public class Lattice
 {
-	private int width, height;
+	private int s;
 	private int stick_thick;
 
 	private int level;
 	private int max_level;
 
-	private ArrayList<Rectangle2D.Double> sticks;
 	Color[] colors = {
 		new Color(249, 65, 68),
 		new Color(248, 150, 30),
@@ -18,38 +18,66 @@ public class Lattice
 		new Color(87, 117, 144)
 	};
 
+	public class Cross
+	{
+		int x, y, s, level;
+		Rectangle2D.Double H, W;
+		public Cross(int x, int y, int s, int level)
+		{
+			this.x = x;
+			this.y = y;
+			this.s = s;
+			this.level = level;
+
+			H = new Rectangle2D.Double(x, y + s/2 - stick_thick/2, s, stick_thick);
+			W = new Rectangle2D.Double(x + s/2 - stick_thick/2, y, stick_thick, s);
+		}
+		public void draw(Graphics2D g2d)
+		{
+			g2d.setColor(colors[level]);
+			g2d.fill(H);
+			g2d.fill(W);
+		}
+	};
+
+	private ArrayList<Cross> sticks;
+	private Stack<Cross> stack;
+
 	private boolean visible;
 	
 	public void level_up()
 	{
-		if(level==max_level)
-		{
-			sticks.clear();
-			level = 0;
-		}
-		
-		level += 1;
+		if(!visible)
+			return;
+		level++;
+		if(level > sticks.size())
+			level = 1;
+	}
+	private void preprocess_sticks()
+	{
+		sticks = new ArrayList<Cross>();
+		stack = new Stack<Cross>();
 
-		// each level introduces 1<<level sticks
-		for(int t = 1; t < (1<<level); t += 2)
+		stack.push(new Cross(0, 0, s, 0));
+		while(!stack.empty())
 		{
-			int v = (width*t)/(1<<level) - stick_thick/2;
-			sticks.add(new Rectangle2D.Double(v,0,stick_thick,height));
-			sticks.add(new Rectangle2D.Double(0,v,width,stick_thick));
+			Cross c = stack.pop();
+			sticks.add(c);
+			if(c.level < max_level-1)
+				for(int dx = 0; dx <= 1; dx++)
+					for(int dy = 0; dy <= 1; dy++)
+						stack.push(new Cross(c.x + dx*(c.s>>1), c.y + dy*(c.s>>1), c.s>>1, c.level+1));
 		}
 	}
-	public Lattice(int width, int height, int max_level)
+	public Lattice(int s, int max_level)
 	{
-		this.width = width;
-		this.height = height;
+		this.s = s;
 		this.max_level = max_level;
 
-		sticks = new ArrayList<Rectangle2D.Double>();
-
 		this.stick_thick = 6;
-		this.level = 0;
+		this.level = 1;
 
-		level_up();
+		preprocess_sticks();
 
 		this.visible = false;
 	}
@@ -58,16 +86,8 @@ public class Lattice
 		if(!visible)
 			return;
 
-		int i = sticks.size()-1;
-		for(int t = level; t >= 1; t--)
-		{
-			g2d.setColor(colors[t-1]);
-			for(int k = 0; k < (1<<t); k++, i--)
-			{
-				// System.out.println(sticks.get(i));
-				g2d.fill(sticks.get(i));
-			}
-		}
+		for(int i = level-1; i >= 0; i--)
+			sticks.get(i).draw(g2d);
 	}
 	public void toggleVisibility()
 	{
