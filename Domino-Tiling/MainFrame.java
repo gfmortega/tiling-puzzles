@@ -170,30 +170,26 @@ public class MainFrame extends JFrame
 	}
 	private boolean newGame()
 	{
-		/***
-			Ask to toggle-choose one of:
-				No squares missing
-				One square missing
-				Opposite corners missing
-				Two squares missing (same color)
-				Any two squares missing
-		***/
-		// boolean invalid_N = true;
-		// int n = 1;
-		// while(invalid_N)
-		// {
-		// 	try
-		// 	{
-		// 		String s = JOptionPane.showInputDialog(null,"Remove N random squares.  Input N from 1 to 4:");
-		// 		if(s==null)
-		// 			return false;
-		// 		n = Integer.parseInt(s);
-		// 		invalid_N = !(1 <= n && n <= 4);
-		// 	}
-		// 	catch(Exception e)
-		// 	{
-		// 	}
-		// }
+		Object[] options = {"Normal Chessboard",
+                    "One Square Missing",
+                    "Adjacent Corners Missing",
+                    "Opposite Corners Missing",
+                	"Two Squares Missing (Opposite Colors)",
+                	"Two Squares Missing (Any)"};
+
+        JComboBox optionList = new JComboBox(options);
+                optionList.setSelectedIndex(0);
+
+		String s = (String)JOptionPane.showInputDialog(
+			this,
+		    "What type of chessboard do you want to tile?",
+		    "Select Screen",
+		    JOptionPane.PLAIN_MESSAGE,
+		    null,
+		    options,
+		    -1);
+		if(s==null)
+			return false;
 		
 		grid_size = 8;
 		GameData.tileSize = GameData.preferredSize/grid_size + (GameData.preferredSize%grid_size==0 ? 0 : 1);
@@ -215,26 +211,6 @@ public class MainFrame extends JFrame
 			grid_information[grid_size+2][j].taint();
 		}
 
-		Object[] options = {"Normal Chessboard",
-                    "One Square Missing",
-                    "Adjacent Corners Missing",
-                    "Opposite Corners Missing",
-                	"Two Squares Missing (Opposite Colors)",
-                	"Two Squares Missing (Any)"};
-
-        JComboBox optionList = new JComboBox(options);
-                optionList.setSelectedIndex(0);
-
-		String s = null;
-		while(s == null)
-			s = (String)JOptionPane.showInputDialog(
-			this,
-		    "What type of chessboard do you want to tile?",
-		    "Select Screen",
-		    JOptionPane.PLAIN_MESSAGE,
-		    null,
-		    options,
-		    -1);
 
 		ArrayList<Tuple> tainted = new ArrayList<Tuple>();
 
@@ -265,7 +241,7 @@ public class MainFrame extends JFrame
 			missingSquares = 2;
 			Tuple a = randomTuple(rand);
 			Tuple b = randomTuple(rand);
-			while(a.equals(b) || (s.equals(options[3]) && a.color()==b.color()))
+			while(a.equals(b) || (s.equals(options[4]) && a.color()==b.color()))
 				b = randomTuple(rand);
 			tainted.add(a);
 			tainted.add(b);
@@ -278,7 +254,7 @@ public class MainFrame extends JFrame
 		moveController.clearMoves();
 		
 		successfulClicks = 0;
-		this.setTitle("Domino Tiling");
+		this.setTitle("s");
 		
 		GameData.shuffleColors();
 		// for(int i = 0; i < grid_size; i++)

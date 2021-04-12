@@ -14,6 +14,7 @@ public class Cycle
 
 	private int mode;
 	private ArrayList<Tuple> tainted;
+	private boolean adjacent_taint;
 
 	private Tuple sequence[];
 
@@ -43,6 +44,11 @@ public class Cycle
 		}
 
 		sequence[64] = sequence[0];
+
+		this.adjacent_taint = false;
+		for(int i = 0; i < 64; i++)
+			if(tainted.contains(sequence[i]) && tainted.contains(sequence[i+1]))
+				this.adjacent_taint = true;
 	}
 	public void draw(Graphics2D g2d)
 	{
@@ -88,7 +94,7 @@ public class Cycle
 						g2d.setColor(Color.BLACK);
 						g2d.draw(r);
 					}
-					else
+					else if(!adjacent_taint)
 						col ^= 1;
 				}
 			}
@@ -115,7 +121,7 @@ public class Cycle
 					g2d.setColor(Color.BLACK);
 					g2d.draw(e);
 				}
-				else
+				else if(!adjacent_taint)
 					col ^= 1;
 			}
 		}

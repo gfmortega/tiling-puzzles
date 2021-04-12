@@ -188,9 +188,7 @@ public class MainFrame extends JFrame
         JComboBox optionList = new JComboBox(options);
                 optionList.setSelectedIndex(0);
 
-		String s = null;
-		while(s == null)
-			s = (String)JOptionPane.showInputDialog(
+		String s = (String)JOptionPane.showInputDialog(
 			this,
 		    "What sized board would you like to tile?",
 		    "Select Screen",
@@ -198,6 +196,9 @@ public class MainFrame extends JFrame
 		    null,
 		    options,
 		    -1);
+
+		if(s==null)
+			return false;
 
 		int n = 1;
 		if(s.equals(options[0]))
