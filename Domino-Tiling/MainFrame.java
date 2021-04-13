@@ -3,6 +3,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.util.Random;
 import java.util.ArrayList;
+import java.util.TreeSet;
 public class MainFrame extends JFrame
 {
 	public int width;
@@ -170,12 +171,18 @@ public class MainFrame extends JFrame
 	}
 	private boolean newGame()
 	{
+		/***
+			This function is way too bloated;
+			refactor into more functions sometime
+		***/
 		Object[] options = {"Normal Chessboard",
                     "One Square Missing",
                     "Adjacent Corners Missing",
                     "Opposite Corners Missing",
-                	"Two Squares Missing (Opposite Colors)",
-                	"Two Squares Missing (Any)"};
+                	"Two Squares Missing (Different Colors)",
+                	"Two Squares Missing (Any)",
+                	"Six Squares Missing (Special)",
+                	"Many Squares Missing (Equal Black and White)"};
 
         JComboBox optionList = new JComboBox(options);
                 optionList.setSelectedIndex(0);
@@ -236,7 +243,7 @@ public class MainFrame extends JFrame
 			tainted.add(new Tuple(0,0));
 			tainted.add(new Tuple(grid_size-1,grid_size-1));
 		}
-		else
+		else if(s.equals(options[4]) || s.equals(options[5]))
 		{
 			missingSquares = 2;
 			Tuple a = randomTuple(rand);
@@ -246,6 +253,30 @@ public class MainFrame extends JFrame
 			tainted.add(a);
 			tainted.add(b);
 		}
+		else if(s.equals(options[6]))
+		{
+			missingSquares = 6;
+			tainted.add(new Tuple(3, 7));
+			tainted.add(new Tuple(4, 7));
+			tainted.add(new Tuple(4, 6));
+			tainted.add(new Tuple(5, 6));
+			tainted.add(new Tuple(7, 4));
+			tainted.add(new Tuple(7, 3));
+		}
+		else
+		{
+			missingSquares = 2*(rand.nextInt(4)+2);
+			int col = 0;
+			while(tainted.size() < missingSquares)
+			{
+				Tuple a = randomTuple(rand);
+				if(!tainted.contains(a) && a.color()==col)
+				{
+					tainted.add(a);
+					col ^= 1;
+				}
+			}
+		}
 
 		for(int i = 0; i < tainted.size(); i++)
 			taint(tainted.get(i));
@@ -254,7 +285,7 @@ public class MainFrame extends JFrame
 		moveController.clearMoves();
 		
 		successfulClicks = 0;
-		this.setTitle("s");
+		this.setTitle(s);
 		
 		GameData.shuffleColors();
 		// for(int i = 0; i < grid_size; i++)

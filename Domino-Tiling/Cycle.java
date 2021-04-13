@@ -94,7 +94,7 @@ public class Cycle
 						g2d.setColor(Color.BLACK);
 						g2d.draw(r);
 					}
-					else if(!adjacent_taint)
+					else if(!adjacent_taint && tainted.size()==2)
 						col ^= 1;
 				}
 			}
@@ -121,7 +121,7 @@ public class Cycle
 					g2d.setColor(Color.BLACK);
 					g2d.draw(e);
 				}
-				else if(!adjacent_taint)
+				else if(!adjacent_taint && tainted.size()==2)
 					col ^= 1;
 			}
 		}
@@ -129,7 +129,7 @@ public class Cycle
 	public void toggleVisible()
 	{
 		mode = (mode+1)%3;
-		if(mode==2 && tainted.size() != 2)
+		if(mode==2 && tainted.isEmpty())
 			mode = (mode+1)%3;
 	}
 }
