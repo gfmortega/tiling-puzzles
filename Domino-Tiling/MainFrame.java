@@ -51,7 +51,7 @@ public class MainFrame extends JFrame
 	}
 	private boolean gameIsWon()
 	{
-		return successfulClicks==(grid_size*grid_size-missingSquares)/2;
+		return missingSquares + 2*successfulClicks == grid_size*grid_size;
 	}
 	private void setUpButtons()
 	{
